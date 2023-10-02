@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+</head>
+<body>
+    <h1>Upload a File</h1>
+    <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" id="fileInput" accept=".txt, .pdf, .docx">
+        <button type="submit">Upload</button>
+    </form>
+    
+    <div id="message"></div>
+    
+    <script>
+        const uploadForm = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('fileInput');
+        const messageDiv = document.getElementById('message');
+
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.status === 200) {
+                    messageDiv.textContent = 'File uploaded successfully.';
+                    messageDiv.style.color = 'green';
+                } else {
+                    messageDiv.textContent = 'Error uploading file.';
+                    messageDiv.style.color = 'red';
+                }
+            } catch (error) {
+                console.error(error);
+                messageDiv.textContent = 'An error occurred.';
+                messageDiv.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>
